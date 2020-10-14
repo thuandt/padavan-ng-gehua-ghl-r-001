@@ -1,0 +1,45 @@
+name: gehua-ghl-r-001
+on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - created
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+      - name: Initialization Environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd fakeroot \
+          cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
+          pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget gcc-multilib
+          sudo timedatectl set-timezone 'Asia/Ho_Chi_Minh'
+      - name: Apply custom config
+        run: |
+          cp -f newifi-d2.config padavan-ng/trunk/configs/templates/newifi-d2.config
+          cp -f newifi-d2.config padavan-ng/trunk/.config
+      - name: Build toolchain
+        working-directory: padavan-ng/toolchain
+        run: |
+          sudo ./clean_sources.sh
+          sudo ./build_toolchain.sh
+      - name: Build firmware
+        working-directory: padavan-ng/trunk
+        run: |
+          sudo ./clear_tree.sh
+          sudo ./build_firmware.sh
+      - name: Upload Packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: gehua-ghl-r-001
+          path: padavan-ng/trunk/images/*.trx

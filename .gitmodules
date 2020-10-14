@@ -1,0 +1,3 @@
+[submodule "padavan-ng"]
+	path = padavan-ng
+	url = https://gitlab.com/dm38/padavan-ng.git
