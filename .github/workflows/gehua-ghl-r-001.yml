@@ -23,8 +23,9 @@ jobs:
           sudo timedatectl set-timezone 'Asia/Ho_Chi_Minh'
       - name: Apply custom config
         run: |
-          cp -f newifi-d2.custom.config padavan-ng/trunk/configs/templates/newifi-d2.config
-          cp -f newifi-d2.custom.config padavan-ng/trunk/.config
+          cp -f newifi-d2.config padavan-ng/trunk/configs/templates/newifi-d2.config
+          cp -f newifi-d2.config padavan-ng/trunk/.config
+          cp -f build_toolchain.sh padavan-ng/toolchain/build_toolchain.sh
       - name: Build toolchain
         working-directory: padavan-ng/toolchain
         run: |
